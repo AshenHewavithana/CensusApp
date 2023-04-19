@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -52,10 +53,10 @@ public class AddData extends AppCompatActivity {
     ImageView imageView;
     FloatingActionButton openCamera;
     Button submit;
-    String gender;
+    String gender, entryTime;
     DBHelper db;
-    Bitmap userImg;
-    OutputStream outputStream;
+    Uri imageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +76,17 @@ public class AddData extends AppCompatActivity {
             ActivityCompat.requestPermissions(AddData.this, new String[]{android.Manifest.permission.CAMERA}, 101);
         }
 
+        entryTime = String.valueOf(System.currentTimeMillis());
+
         openCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                Uri imagePath = saveImage();
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
                 startActivityForResult(intent, 101);
             }
         });
-
-
 
         submit.setOnClickListener(new View.OnClickListener() {
 
@@ -100,7 +103,7 @@ public class AddData extends AppCompatActivity {
                     gender = "Female";
                 }
 
-                Boolean saveUserData = db.saveData(nameText, ageNum, gender);
+                Boolean saveUserData = db.saveData(nameText, ageNum, gender, entryTime);
 
                 if(TextUtils.isEmpty(nameText) || TextUtils.isEmpty(ageNum) || TextUtils.isEmpty(gender)){
                     Toast.makeText(AddData.this, "Enter all Data!", Toast.LENGTH_SHORT).show();
@@ -119,64 +122,37 @@ public class AddData extends AppCompatActivity {
                     }
                 }
 
-                if(ContextCompat.checkSelfPermission(AddData.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-                    saveImage();
-                }else{
-                    askPermission();
-                }
             }
         });
     }
 
-    private void askPermission() {
-        ActivityCompat.requestPermissions(AddData.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
-    }
+    private Uri saveImage() {
+        Uri uri = null;
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                saveImage();
-            } else {
-                Toast.makeText(AddData.this, "Please grant permission!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+        ContentResolver resolver = getContentResolver();
 
-    private void saveImage() {
-        File dir = new File(Environment.getExternalStorageDirectory(),"SaveImage");
-        if(!dir.exists()){
-            dir.mkdir();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY); //DCIM or Pictures
+        }else {
+            uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         }
 
-        File file = new File(dir, name.getText().toString() + ".jpg");
-        try {
-            outputStream = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        userImg.compress(Bitmap.CompressFormat.JPEG,100, outputStream);
-        try {
-            outputStream.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        String imgName = entryTime;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, imgName + ".jpg");
+        contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/"+"User Images/");
+        Uri finalUri = resolver.insert(uri, contentValues);
+        imageUri = finalUri;
+        return finalUri;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(bitmap);
-            userImg = bitmap;
+            if(resultCode == Activity.RESULT_OK){
+                imageView.setImageURI(imageUri);
+            }
         }
     }
 }
