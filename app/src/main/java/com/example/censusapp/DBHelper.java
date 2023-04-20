@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
-    public static final String DBNAME = "users.db";
+    public static final String DBNAME = "user.db";
     public static final String TABLENAME = "userData";
     public static final int VER = 1;
     public DBHelper(Context context) {
@@ -45,11 +45,5 @@ public class DBHelper extends SQLiteOpenHelper {
         else {
             return true;
         }
-    }
-
-    public Cursor getData() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from "+TABLENAME,null);
-        return cursor;
     }
 }

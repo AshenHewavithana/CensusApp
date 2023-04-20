@@ -54,7 +54,6 @@ import java.util.Vector;
 public class AddData extends AppCompatActivity {
 
     private static final int requestCamera = 100;
-
     TextInputEditText name, age;
     RadioGroup genderGroup;
     RadioButton radioButton;
@@ -87,7 +86,7 @@ public class AddData extends AppCompatActivity {
                 String gender = radioButton.getText().toString();
 
                 String nameText = name.getText().toString();
-                String ageText = String.valueOf(age);
+                String ageText = age.getText().toString();
 
                 Boolean savedata = db.saveUserData(id, nameText, ageText, gender,byteArray);
 
