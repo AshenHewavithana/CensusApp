@@ -35,8 +35,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -51,220 +53,80 @@ import java.util.Vector;
 
 public class AddData extends AppCompatActivity {
 
-    private static int REQUEST_CODE = 100;
+    private static final int requestCamera = 100;
+
     TextInputEditText name, age;
-    RadioButton male, female;
-    ImageView imageView;
+    RadioGroup genderGroup;
+    RadioButton radioButton;
+    ImageView userImage;
     FloatingActionButton openCamera;
     Button submit;
-    String gender, entryTime;
     DBHelper db;
-    SQLiteDatabase sqlDb;
-    Uri imageUri;
+    byte[] byteArray;
     int id = 0;
-
-    public static final int CAMERA_REQUEST=100;
-    public static final int STORAGE_REQUEST=101;
-    String[]cameraPermission;
-    String[]storagePermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_data);
 
+        name = findViewById(R.id.nameTxt);
+        age = findViewById(R.id.ageTxt);
+        genderGroup = findViewById(R.id.radioBtnGroup);
+        userImage = findViewById(R.id.image_view_person);
+        openCamera = findViewById(R.id.cameraBtn);
+        submit = findViewById(R.id.submitBtn);
         db = new DBHelper(this);
-        findId();
-        insertData();
-        captureImage();
 
-        entryTime = String.valueOf(System.currentTimeMillis());
-
-        openCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                Uri imagePath = saveImage();
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
-                startActivityForResult(intent, 101);
-            }
-        });
-
-//        submit.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                String nameText = name.getText().toString();
-//                String ageNum = age.getText().toString();
-//
-//                if(male.isChecked()){
-//                    gender = "Male";
-//                }
-//                else {
-//                    gender = "Female";
-//                }
-//
-//                Boolean saveUserData = db.saveData(nameText, ageNum, gender, entryTime);
-//
-//                if(TextUtils.isEmpty(nameText) || TextUtils.isEmpty(ageNum) || TextUtils.isEmpty(gender)){
-//                    Toast.makeText(AddData.this, "Enter all Data!", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }else {
-//                    if(saveUserData == true){
-//                        Toast.makeText(AddData.this, "Data Saved Successfully", Toast.LENGTH_SHORT).show();
-//                        name.setText("");
-//                        age.setText("");
-//                        male.setChecked(false);
-//                        female.setChecked(false);
-//                        imageView.setImageResource(R.drawable.baseline_person_128);
-//                    }
-//                    else{
-//                        Toast.makeText(AddData.this, "User Data Exists", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//
-//            }
-//        });
-    }
-
-    private void captureImage() {
-        openCamera.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View v) {
-                int img = 0;
-                if (img == 0) {
-                    if (!checkCameraPermission()) {
-                        requestCameraPermission();
-                    }
-                } else if (img == 1) {
-                    if (!checkStoragePermission()) {
-                        requestStoragePermission();
-                    }
-                }
-            }
-        });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermission() {
-        requestPermissions(storagePermission,STORAGE_REQUEST);
-    }
-
-    private boolean checkStoragePermission() {
-        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        return result;
-    }
-
-    private boolean checkCameraPermission() {
-        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
-        boolean result2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        return result && result2;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestCameraPermission() {
-        requestPermissions(cameraPermission,CAMERA_REQUEST);
-    }
-
-    private void insertData() {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentValues cv = new ContentValues();
-                cv.put("avatar",ImageViewToByte(imageView));
-                cv.put("name",name.getText().toString());
-                cv.put("age",String.valueOf(age));
-                gender = (male.isChecked()) ? "Male" : "Female";
-                cv.put("gender",gender);
-                sqlDb = db.getWritableDatabase();
-                Long resInsert = sqlDb.insert(TABLENAME,null,cv);
-                if(resInsert!=null){
-                    Toast.makeText(AddData.this, "Data Saved Successfully", Toast.LENGTH_SHORT).show();
-                    // clear form when data is submitted
-                    name.setText("");
-                    age.setText("");
-                    male.setChecked(false);
-                    female.setChecked(false);
-                    imageView.setImageResource(R.drawable.baseline_person_128);
-                }
-            }
-        });
-    }
+                id++;
+                int g_id = genderGroup.getCheckedRadioButtonId();
+                radioButton = findViewById(g_id);
+                String gender = radioButton.getText().toString();
 
-    private byte[] ImageViewToByte(ImageView imageView) {
-        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
-        byte[]bytes = stream.toByteArray();
-        return bytes;
-    }
+                String nameText = name.getText().toString();
+                String ageText = String.valueOf(age);
 
-    private void findId() {
-        imageView = findViewById(R.id.image_view_person);
-        openCamera = findViewById(R.id.cameraBtn);
-        name = findViewById(R.id.nameTxt);
-        age = findViewById(R.id.ageTxt);
-        male = findViewById(R.id.maleRbtn);
-        female = findViewById(R.id.femaleRbtn);
-        submit = findViewById(R.id.submitBtn);
-    }
+                Boolean savedata = db.saveUserData(id, nameText, ageText, gender,byteArray);
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case CAMERA_REQUEST:{
-                if(grantResults.length>0){
-                    boolean camera_accept = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    if(camera_accept){
-                        openCamera();
-                    }else {
-                        Toast.makeText(this, "Enable camera permission", Toast.LENGTH_SHORT).show();
+                if(TextUtils.isEmpty(nameText) || TextUtils.isEmpty(ageText) || TextUtils.isEmpty(gender)){
+                    Toast.makeText(AddData.this, "Enter all Data!", Toast.LENGTH_SHORT).show();
+                    return;
+                }else{
+                    if(savedata == true){
+                        Toast.makeText(AddData.this, "Data saved successfully!", Toast.LENGTH_SHORT).show();
+                        name.setText("");
+                        age.setText("");
+                        radioButton.setChecked(false);
+                        userImage.setImageResource(R.drawable.baseline_person_128);
+                    }
+                    else{
+                        Toast.makeText(AddData.this, "Data exists", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
-            break;
-        }
-    }
+        });
 
-    private void openCamera() {
         openCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(camera,requestCamera);
             }
         });
     }
-
-//    private Uri saveImage() {
-//        Uri uri = null;
-//
-//        ContentResolver resolver = getContentResolver();
-//
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-//            uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY); //DCIM or Pictures
-//        }else {
-//            uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-//        }
-//
-//        String imgName = entryTime;
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, imgName + ".jpg");
-//        contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/"+"User Images/");
-//        Uri finalUri = resolver.insert(uri, contentValues);
-//        imageUri = finalUri;
-//        return finalUri;
-//    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 101) {
-            if(resultCode == Activity.RESULT_OK){
-                imageView.setImageURI(imageUri);
-            }
+        if(requestCode == requestCamera){
+            Bitmap bitmapImage = (Bitmap)data.getExtras().get("data");
+            userImage.setImageBitmap(bitmapImage);
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmapImage.compress(Bitmap.CompressFormat.PNG,100,stream);
+            byteArray = stream.toByteArray();
         }
     }
 }

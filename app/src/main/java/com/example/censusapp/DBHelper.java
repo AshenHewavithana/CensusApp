@@ -5,20 +5,23 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DBNAME = "users.db";
-    public static final String TABLENAME = "userDetails";
+    public static final String TABLENAME = "userData";
     public static final int VER = 1;
     public DBHelper(Context context) {
-        super(context, "UserDB", null, 1);
+        super(context, DBNAME, null, VER);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query = "create table " + TABLENAME +"(id integer primary key, userImg blob, name text, age text, gender text)";
+        String query = "create table " + TABLENAME +"(id integer primary key, img blob, name text, age text, gender text)";
         db.execSQL(query);
     }
 
@@ -28,26 +31,25 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public Boolean saveData (String name, String age, String gender, String entryTime){
+    public boolean saveUserData(int id, String name, String age, String gender, byte[] img){
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name",name);
-        contentValues.put("age",age);
-        contentValues.put("gender",gender);
-        contentValues.put("entryTime",entryTime);
-
-        long result = db.insert("UserInfo",null, contentValues);
-        if (result == -1){
+        ContentValues cv = new ContentValues();
+        cv.put("name", name);
+        cv.put("age", age);
+        cv.put("gender", gender);
+        cv.put("img", img);
+        long result = db.insert(TABLENAME,null,cv);
+        if(result == -1){
             return false;
         }
-        else{
+        else {
             return true;
         }
     }
 
-    public Cursor getData(){
+    public Cursor getData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from UserInfo", null);
+        Cursor cursor = db.rawQuery("select * from "+TABLENAME,null);
         return cursor;
     }
 }

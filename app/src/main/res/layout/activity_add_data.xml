@@ -68,14 +68,14 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/maleRbtn"
+                android:id="@+id/r1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="75dp"
                 android:text="@string/male" />
 
             <RadioButton
-                android:id="@+id/femaleRbtn"
+                android:id="@+id/r2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/female" />
