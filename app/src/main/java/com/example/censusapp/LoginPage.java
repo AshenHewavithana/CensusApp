@@ -11,11 +11,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 public class LoginPage extends AppCompatActivity {
     Integer count = 0;
     protected void onCreate(Bundle savedInstanceState) {
 
-        EditText userPw;
+        TextInputEditText userPw;
         Button login;
         String password,pw;
         SharedPreferences sp;
@@ -29,22 +31,26 @@ public class LoginPage extends AppCompatActivity {
         sp = getSharedPreferences("LoginPassword", Context.MODE_PRIVATE);
         password = sp.getString("password","");
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(password.equals(userPw.getText().toString())){
-                    Intent intent = new Intent(LoginPage.this, HomePage.class);
-                    startActivity(intent);
-                }else{
-                    count++;
-                    Toast.makeText(LoginPage.this, "Incorrect Password", Toast.LENGTH_LONG).show();
-                }
+        if(password != null){
+            login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(password.equals(userPw.getText().toString())){
+                        Intent intent = new Intent(LoginPage.this, HomePage.class);
+                        startActivity(intent);
+                    }else{
+                        count++;
+                        Toast.makeText(LoginPage.this, "Incorrect Password", Toast.LENGTH_LONG).show();
+                    }
 
-                if(count >= 3){
-                    LoginPage.this.finish();
-                    System.exit(0);
+                    if(count >= 3){
+                        LoginPage.this.finish();
+                        System.exit(0);
+                    }
                 }
-            }
-        });
+            });
+        }else{
+            Intent intent = new Intent(LoginPage.this, MainActivity.class);
+        }
     }
 }

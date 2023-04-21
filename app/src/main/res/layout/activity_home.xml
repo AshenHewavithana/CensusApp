@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#03A9F4"
+        android:background="@color/white"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,8 +26,9 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="5dp"
             android:padding="10dp"
-            android:text="Census App"
-            android:textColor="@color/white"
+            android:text="CENSUS APP"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="25dp" />
 
         <TextView
@@ -36,9 +37,10 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="5dp"
+            android:textAlignment="center"
             android:padding="15dp"
             android:text="This App was developed by AB Hewavithana D/BSE/21/0001"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="18dp" />
 
         <RelativeLayout
@@ -51,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:elevation="10dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@android:color/holo_blue_light"
                 app:cardCornerRadius="10dp">
 
                 <TextView
@@ -60,6 +62,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Add Data"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:textSize="18sp" />
 
@@ -77,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:elevation="10dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@android:color/holo_blue_light"
                 app:cardCornerRadius="10dp">
 
                 <TextView
@@ -85,6 +89,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="List Data"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:textAllCaps="true"
                     android:textSize="18sp" />
 
@@ -102,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:elevation="10dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@android:color/holo_blue_light"
                 app:cardCornerRadius="10dp">
 
                 <TextView
@@ -110,7 +116,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Preferences"
+                    android:textColor="@color/white"
                     android:textAllCaps="true"
+                    android:textStyle="bold"
                     android:textSize="18sp" />
 
             </androidx.cardview.widget.CardView>
@@ -135,6 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Logout"
+                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:textSize="18sp" />

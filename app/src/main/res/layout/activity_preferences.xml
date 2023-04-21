@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#03A9F4"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,12 +20,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="5dp"
+            android:layout_margin="20dp"
             android:padding="10dp"
             android:text="Census App"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="25dp" />
 
         <TextView
@@ -37,7 +34,7 @@
             android:layout_marginRight="5dp"
             android:padding="10dp"
             android:text="Preferences"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="20dp" />
 
@@ -48,18 +45,18 @@
             android:layout_marginRight="5dp"
             android:padding="10dp"
             android:text="Change the background color of app"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="18dp" />
 
         <Button
             android:id="@+id/changeColorBtn"
-            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:backgroundTint="@android:color/white"
+            android:textSize="16dp"
+            android:backgroundTint="@android:color/holo_blue_light"
             android:text="Change Color"
-            android:textColor="@color/black" />
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

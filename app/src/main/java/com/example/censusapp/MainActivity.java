@@ -11,9 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 public class MainActivity extends AppCompatActivity {
 
-    EditText password, passwordRepeat;
+    TextInputEditText password, passwordRepeat;
     Button register;
     SharedPreferences sp;
     String pw, pwR;
@@ -23,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        password = findViewById(R.id.password);
-        passwordRepeat = findViewById(R.id.password1);
+        password = findViewById(R.id.passwordTxt);
+        passwordRepeat = findViewById(R.id.repeatPw);
         register = findViewById(R.id.regBtn);
 
         sp = getSharedPreferences("LoginPassword", Context.MODE_PRIVATE);
@@ -40,13 +42,13 @@ public class MainActivity extends AppCompatActivity {
                 if(pw.contentEquals(pwR)){
                     editor.putString("password",pw);
                     editor.putString("passwordRepeat",pwR);
-                    editor.commit();
-                    Toast.makeText(MainActivity.this, "Password Saved!", Toast.LENGTH_LONG).show();
+                    editor.apply();
+                    Toast.makeText(MainActivity.this, "Password Saved!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, HomePage.class);
                     startActivity(intent);
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "Passwords are not similar!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Passwords are not similar!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
