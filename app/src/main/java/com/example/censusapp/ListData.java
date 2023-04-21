@@ -11,27 +11,50 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListData extends AppCompatActivity {
+
+    StorageReference storageReference;
     RecyclerView recyclerView;
     SQLiteDatabase sqLiteDatabase;
     DBHelper db;
     MyAdapter adapter;
+    Button cloudBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_data);
         db = new DBHelper(this);
         recyclerView = findViewById(R.id.rv);
+        cloudBtn = findViewById(R.id.pushToCloud);
         displayData();
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
+        cloudBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadData();
+            }
+        });
+    }
+
+    private void uploadData() {
+        storageReference = FirebaseStorage.getInstance().getReference();
     }
 
     private void displayData() {
