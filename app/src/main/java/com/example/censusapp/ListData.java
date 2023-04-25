@@ -12,15 +12,23 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
@@ -31,6 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -42,6 +51,7 @@ import java.util.Map;
 public class ListData extends AppCompatActivity {
 
     StorageReference storageReference;
+    FirebaseStorage storage;
     RecyclerView recyclerView;
     SQLiteDatabase sqLiteDatabase;
     DBHelper db;
@@ -50,11 +60,8 @@ public class ListData extends AppCompatActivity {
     ImageView imageView;
     int id;
     byte[] image;
-    String name, age, gender, imageStr;
+    String name, age, gender, imageURL, docName;
     ArrayList<Model>models = new ArrayList<>();
-
-//    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-//    DatabaseReference userRef = firebaseDatabase.getReference("users");
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +81,8 @@ public class ListData extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadData();
+                db.clear();
+                recreate();
             }
         });
     }
@@ -81,15 +90,29 @@ public class ListData extends AppCompatActivity {
     private void uploadData() {
         Cursor cursor = db.getAllData();
 
+        CollectionReference collectionRef = firestore.collection("users");
+
+        Map<String,Object> data = new HashMap<>();
+
         if(cursor.getCount()==0){
             Toast.makeText(ListData.this, "No Data to push!", Toast.LENGTH_SHORT).show();
         }else{
-            Map<String,Object> data = new HashMap<>();
             while (cursor.moveToNext()){
-                String docName = cursor.getString(2);
+                String imgName = cursor.getString(0) + "_" + cursor.getString(2);
+
+                storage = FirebaseStorage.getInstance();
+                storageReference = storage.getReference();
+
+                StorageReference imageRef = storageReference.child("images/"+ imgName);
+
+                image = cursor.getBlob(1);
+
+                UploadTask uploadTask = imageRef.putBytes(image);
+
+                docName = cursor.getString(2);
                 data.put("id",cursor.getString(0));
-                String imgStr = new String(cursor.getBlob(1));
-                data.put("image",imgStr);
+                image = cursor.getBlob(1);
+                data.put("image",String.valueOf(image));
                 data.put("name",cursor.getString(2));
                 data.put("age",cursor.getString(3));
                 data.put("gender",cursor.getString(4));
@@ -97,14 +120,14 @@ public class ListData extends AppCompatActivity {
                 firestore.collection("users").document(docName).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(ListData.this, "Pushed to Cloud", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ListData.this, "Data pushed to cloud!", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ListData.this, "Error occured!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ListData.this, "Failed to pushed to cloud!", Toast.LENGTH_SHORT).show();
                     }
-                });  
+                });
             }
         }
     }
