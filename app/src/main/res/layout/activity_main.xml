@@ -14,6 +14,13 @@
         android:gravity="center"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
 
+        <ImageView
+            android:id="@+id/peopleImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/people" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,38 +45,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
+            app:hintTextColor="@color/black"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             app:boxStrokeColor="@android:color/holo_blue_light"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/baseline_password_24">
+            app:startIconDrawable="@drawable/baseline_password_24"
+            app:startIconTint="@color/black"
+            android:textColorHint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordTxt"
                 android:password="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Repeat Password"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             app:boxStrokeColor="@android:color/holo_blue_light"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/baseline_password_24">
+            app:startIconDrawable="@drawable/baseline_password_24"
+            app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/repeatPw"
                 android:password="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton

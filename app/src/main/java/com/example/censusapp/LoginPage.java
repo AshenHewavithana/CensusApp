@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,14 +19,16 @@ public class LoginPage extends AppCompatActivity {
 
         TextInputEditText userPw;
         Button login;
-        String password,pw;
+        String password;
         SharedPreferences sp;
+        TextView register;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         userPw = findViewById(R.id.passwordTxt);
         login = findViewById(R.id.loginBtn);
+        register = findViewById(R.id.regText);
 
         sp = getSharedPreferences("LoginPassword", Context.MODE_PRIVATE);
         password = sp.getString("password","");
@@ -51,6 +53,16 @@ public class LoginPage extends AppCompatActivity {
             });
         }else{
             Intent intent = new Intent(LoginPage.this, MainActivity.class);
+            startActivity(intent);
         }
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginPage.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }

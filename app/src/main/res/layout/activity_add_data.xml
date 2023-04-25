@@ -16,7 +16,7 @@
             android:id="@+id/image_view_person"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@android:color/darker_gray"
+            android:background="@android:color/black"
             android:src="@drawable/baseline_person_128" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -24,12 +24,14 @@
             android:layout_height="wrap_content"
             android:hint="@string/name"
             app:hintTextColor="@color/black"
+            android:textColorHint="@color/black"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             app:boxStrokeColor="@android:color/holo_blue_light"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/baseline_person_24">
+            app:startIconDrawable="@drawable/baseline_person_24"
+            app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nameTxt"
@@ -42,11 +44,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/age"
+            android:textColorHint="@color/black"
             app:hintTextColor="@color/black"
             app:boxStrokeColor="@android:color/holo_blue_light"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_margin="15dp"
-            app:startIconDrawable="@drawable/baseline_calendar_month_24">
+            app:startIconDrawable="@drawable/baseline_calendar_month_24"
+            app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/ageTxt"
@@ -101,7 +105,9 @@
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_photo_camera_24"
         android:layout_margin="15dp"
-        android:backgroundTint="@android:color/holo_blue_light"
+        android:backgroundTint="@android:color/white"
+        android:outlineSpotShadowColor="@android:color/holo_blue_light"
+        android:outlineAmbientShadowColor="@android:color/holo_blue_light"
         app:layout_anchor="@id/image_view_person"
         app:layout_anchorGravity="top|right|end"/>
 
