@@ -15,11 +15,12 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:scaleType="fitXY"
+            android:id="@+id/viewUser"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:paddingLeft="5dp"
-            android:id="@+id/viewUser" />
+            android:scaleType="fitXY"
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
