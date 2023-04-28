@@ -14,6 +14,7 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DBNAME, null, VER);
     }
 
+    // creates a table in the database.
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = "create table " + TABLENAME +"(id integer primary key, img blob, name text, age text, gender text)";
@@ -26,6 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    // saves the user data to the table
     public boolean saveUserData(int id, String name, String age, String gender, byte[] img){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -42,12 +44,14 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    // retrieves all data saved in the database
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + TABLENAME,null);
         return res;
     }
 
+    // clears the data of the table
     public void clear(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLENAME,null,null);

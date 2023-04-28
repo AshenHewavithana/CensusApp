@@ -22,7 +22,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.io.ByteArrayOutputStream;
 
 public class AddData extends AppCompatActivity {
-
     private static final int requestCamera = 100;
     TextInputEditText name, age;
     RadioGroup genderGroup;
@@ -47,6 +46,7 @@ public class AddData extends AppCompatActivity {
         submit = findViewById(R.id.submitBtn);
         db = new DBHelper(this);
 
+        // when the submit button is pressed data is saved locally using SQLite
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,6 +58,7 @@ public class AddData extends AppCompatActivity {
                 String nameText = name.getText().toString();
                 String ageText = age.getText().toString();
 
+                // saves data to the SQLite Database
                 Boolean savedata = db.saveUserData(id, nameText, ageText, gender,byteArray);
 
                 if(TextUtils.isEmpty(nameText) || TextUtils.isEmpty(ageText) || TextUtils.isEmpty(gender)){
@@ -79,6 +80,7 @@ public class AddData extends AppCompatActivity {
             }
         });
 
+        // opens the camera and allows the user to take a picture.
         openCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +89,8 @@ public class AddData extends AppCompatActivity {
             }
         });
     }
+
+    // gets the image taken from the camera as a bitmap and converts to a byte array to be saved in SQLite
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

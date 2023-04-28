@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ListData extends AppCompatActivity {
-
     StorageReference storageReference;
     FirebaseStorage storage;
     RecyclerView recyclerView;
@@ -111,6 +110,7 @@ public class ListData extends AppCompatActivity {
         }
     }
 
+    // gets data from the database and adds them to an array list
     private void displayData() {
         sqLiteDatabase = db.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("select * from "+TABLENAME,null);
@@ -120,7 +120,6 @@ public class ListData extends AppCompatActivity {
             name = cursor.getString(2);
             age = cursor.getString(3);
             gender = cursor.getString(4);
-
             models.add(new Model(id,name,age,gender,image));
         }
         cursor.close();

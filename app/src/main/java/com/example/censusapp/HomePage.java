@@ -11,8 +11,6 @@ import androidx.cardview.widget.CardView;
 
 
 public class HomePage extends AppCompatActivity {
-
-//    Button logout;
     CardView logout, addData, listData, pref;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +22,7 @@ public class HomePage extends AppCompatActivity {
         listData = findViewById(R.id.listDataCard);
         pref = findViewById(R.id.prefCard);
 
+        // logouts the user out of the app to the login screen
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,6 +48,7 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+        // directs the user to the add data screen
         addData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +57,7 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+        // directs the user to the list data screen
         listData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +66,7 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+        // directs the user to the preferences screen
         pref.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
